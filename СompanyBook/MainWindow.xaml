@@ -1,12 +1,26 @@
-﻿<Window x:Class="СompanyBook.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:СompanyBook"
+        xmlns:Controls="clr-namespace:CompanyBook.Controls;assembly=CompanyBook.Controls" x:Class="СompanyBook.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="462.2" Width="834.8">
     <Grid>
-        
+        <ListView   x:Name ="companyBookListView"
+                    Margin="10,10,382.2,10" SelectionMode="Single" SelectionChanged="companyBookListView_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="100" Header="Номер телефона" DisplayMemberBinding="{Binding Phone}"/>
+                    <GridViewColumn Width="100" Header="Департамент" DisplayMemberBinding="{Binding Department}"/>
+                    <GridViewColumn Width="auto" Header="ФИО" DisplayMemberBinding="{Binding FIO}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Controls:EmployeeControl x:Name ="employeeControl" Margin="0,10,-0.2,94.8" HorizontalAlignment="Right" Width="378"/>
+        <Button x:Name ="btnApply" Content="Применить" Margin="0,0,272.8,69.8" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="95" Click="btnApply_Click"/>
+        <Button x:Name ="btnRemove" Content="Удалить" Margin="0,0,272.8,9.8" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="95" Click="btnRemove_Click"/>
+        <Button x:Name ="btnAdd" Content="Добавить" Margin="0,0,272.8,39.8" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="95" Click="btnAdd_Click"/>
     </Grid>
 </Window>
