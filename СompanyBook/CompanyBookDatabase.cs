@@ -1,6 +1,7 @@
 ﻿using CompanyBook.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,14 +19,14 @@ namespace СompanyBook
         /// <summary>
         /// Список сотрудников
         /// </summary>
-        public List<Employee> Employees { get; set; }
+        public ObservableCollection<Employee> Employees { get; set; }
 
         /// <summary>
         /// Конструктор по умолчанию
         /// </summary>
         public CompanyBookDatabase()
         {
-            Employees = new List<Employee>();
+            Employees = new ObservableCollection<Employee>();
             GenerateEmployees(25);
         }
 

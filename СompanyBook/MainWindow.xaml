@@ -9,6 +9,8 @@
         Title="MainWindow" Height="462.2" Width="834.8">
     <Grid>
         <ListView   x:Name ="companyBookListView"
+                    ItemsSource="{Binding EmployeeList}"
+                    SelectedItem="{Binding SelectedEmployee}"
                     Margin="10,10,382.2,10" SelectionMode="Single" SelectionChanged="companyBookListView_SelectionChanged">
             <ListView.View>
                 <GridView>

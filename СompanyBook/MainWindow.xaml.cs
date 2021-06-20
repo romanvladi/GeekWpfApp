@@ -1,6 +1,7 @@
 ﻿using CompanyBook.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,19 +23,24 @@ namespace СompanyBook
     public partial class MainWindow : Window
     {
         private CompanyBookDatabase database = new CompanyBookDatabase();
+        public ObservableCollection<Employee> EmployeeList { get; set; }
+        public Employee SelectedEmployee { get; set; }
+
 
         public MainWindow()
         {
             InitializeComponent();
 
-            companyBookListView.ItemsSource = database.Employees;
+            this.DataContext = this;
+
+            EmployeeList = database.Employees;
         }
 
         private void companyBookListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count != 0)
             {
-                employeeControl.SetEmployee((Employee)e.AddedItems[0]);
+                employeeControl.Employee = (Employee)SelectedEmployee.Clone();
             }
         }      
 
@@ -46,8 +52,7 @@ namespace СompanyBook
             }
             else
             {
-                employeeControl.UpdateEmployee();
-                UpdateBinding();
+                EmployeeList[EmployeeList.IndexOf(SelectedEmployee)] = employeeControl.Employee;
             }
         }
 
@@ -62,7 +67,6 @@ namespace СompanyBook
                 if (MessageBox.Show("Удалить выделенный контакт?", "Удаление контакта", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     database.Employees.Remove((Employee)companyBookListView.SelectedItems[0]);
-                    UpdateBinding();
                 }
             }
         }
@@ -70,15 +74,13 @@ namespace СompanyBook
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             Employee empl = new Employee();
-            employeeControl.CreateEmployee(empl);
-            database.Employees.Add(empl);
-            UpdateBinding();
-        }
 
-        private void UpdateBinding()
-        {
-            companyBookListView.ItemsSource = null;
-            companyBookListView.ItemsSource = database.Employees;
+            empl = employeeControl.Employee;
+
+            database.Employees.Add(empl);
+            companyBookListView.SelectedItem = empl;
+            companyBookListView.ScrollIntoView(empl);
+
         }
     }
 }

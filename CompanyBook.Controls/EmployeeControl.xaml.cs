@@ -1,7 +1,10 @@
 ﻿using CompanyBook.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,67 +22,51 @@ namespace CompanyBook.Controls
     /// <summary>
     /// Логика взаимодействия для EmployeeControl.xaml
     /// </summary>
-    public partial class EmployeeControl : UserControl
+    public partial class EmployeeControl : UserControl, INotifyPropertyChanged
     {
-        private Employee employee;
+        private Employee _employee = new Employee();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public Employee Employee
+        {
+            get { return _employee; }
+            set
+            {
+                _employee = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public ObservableCollection<Department> DepartmentList { get; set; } = new ObservableCollection<Department>();
+        public ObservableCollection<Position> PositionList { get; set; } = new ObservableCollection<Position>();
+
         public EmployeeControl()
         {
             InitializeComponent();
 
-            cbDepartment.ItemsSource = Enum.GetValues(typeof(Department)).Cast<Department>();
-            cbPosition.ItemsSource = Enum.GetValues(typeof(Position)).Cast<Position>();
+            this.DataContext = this;
+
+            CreateObservableCollection();
         }
 
-        /// <summary>
-        /// Вывод сотрудника на форму контроллера
-        /// </summary>
-        /// <param name="employee"></param>
-        public void SetEmployee(Employee employee)
+        public void CreateObservableCollection()
         {
-            this.employee = employee;
-
-            tbPhone.Text = employee.Phone;
-            tbFirstName.Text = employee.FirstName;
-            tbLastName.Text = employee.LastName;
-            tbSecondName.Text = employee.SecondName;
-            cbLocked.IsChecked = employee.Locked;
-            cbDepartment.SelectedItem = employee.Department;
-            tbComment.Text = employee.Comment;
-            tbEmail.Text = employee.Email;
-            cbPosition.SelectedItem = employee.Position;
-        }
-
-        /// <summary>
-        /// Обновление сотрудника с формы контроллера
-        /// </summary>
-        public void UpdateEmployee()
-        {
-            employee.Phone = tbPhone.Text;
-            employee.FirstName = tbFirstName.Text;
-            employee.LastName = tbLastName.Text;
-            employee.SecondName = tbSecondName.Text;
-            employee.Locked = (bool)cbLocked.IsChecked;
-            employee.Department = (Department)cbDepartment.SelectedItem;
-            employee.Comment = tbComment.Text;
-            employee.Email = tbEmail.Text;
-            employee.Position = (Position)cbPosition.SelectedItem;
-        }
-
-        /// <summary>
-        /// Зпись нового сотрудника с контроллера в "пустышку"
-        /// </summary>
-        /// <param name="empl"></param>
-        public void CreateEmployee(Employee empl)
-        {
-            empl.Phone = tbPhone.Text;
-            empl.FirstName = tbFirstName.Text;
-            empl.LastName = tbLastName.Text;
-            empl.SecondName = tbSecondName.Text;
-            empl.Locked = (bool)cbLocked.IsChecked;
-            empl.Department = (Department)cbDepartment.SelectedItem;
-            empl.Comment = tbComment.Text;
-            empl.Email = tbEmail.Text;
-            empl.Position = (Position)cbPosition.SelectedItem;
+            foreach (var a in Enum.GetValues(typeof(Department)).Cast<Department>())
+            {
+                DepartmentList.Add(a);
+            }
+            foreach (var a in Enum.GetValues(typeof(Position)).Cast<Position>())
+            {
+                PositionList.Add(a);
+            }
         }
     }
 }
